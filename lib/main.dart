@@ -1,11 +1,31 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:to_do/Home/Home_Screen.dart';
 import 'package:to_do/myThemeData.dart';
 
-void main(){
+void main()async{
+  WidgetsFlutterBinding.ensureInitialized();
+  Platform.isAndroid?
+  await Firebase.initializeApp(
+    options: FirebaseOptions(
+        apiKey: 'AIzaSyCNdBFL7dXp6IEFF2J6Kh0c1gLl9JnW_jw',
+        appId: 'com.example.to_do',
+        messagingSenderId: '102929286502',
+        projectId: 'to-do-acd27')
+  ):
+  await Firebase.initializeApp();
+  await FirebaseFirestore.instance.disableNetwork();
 
-  runApp(myApp());
+  runApp(ChangeNotifierProvider(
+      create: (context) {
+        Provider;
+      },
+      child: myApp()));
 }
 
 class myApp extends StatelessWidget {

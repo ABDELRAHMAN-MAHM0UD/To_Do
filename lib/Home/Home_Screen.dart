@@ -65,10 +65,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
     );
   }
-  List<Widget> taps= [Taskstap(), Settingstap() ];
+  List<Widget> taps= [Taskstap(),
+    Settingstap() ];
 
   void addTaskBottomSheet() {
     showModalBottomSheet(context: context,
         builder: (_) => Addtaskbottomsheet());
+    setState(() {
+
+    });
   }
 }

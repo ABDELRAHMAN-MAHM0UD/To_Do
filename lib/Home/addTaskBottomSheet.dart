@@ -1,7 +1,11 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:to_do/Home/Task.dart';
 import 'package:to_do/appColors.dart';
+import 'package:to_do/firebase_utils.dart';
+import 'package:to_do/provider.dart';
 
 class Addtaskbottomsheet extends StatefulWidget {
   const Addtaskbottomsheet({super.key});
@@ -17,6 +21,10 @@ class _AddtaskbottomsheetState extends State<Addtaskbottomsheet> {
   String description = "";
   @override
   Widget build(BuildContext context) {
+/*
+    var listProvider = Provider.of<ListProvider>(context);
+*/
+
     return Padding(
           padding: const EdgeInsets.only(right: 40,left: 40,bottom: 20,top: 45),
           child:
@@ -104,6 +112,23 @@ class _AddtaskbottomsheetState extends State<Addtaskbottomsheet> {
 
   void addTask() {
     if(formKey.currentState!.validate()==true){
+     /* ListProvider.tasksList.add(Task(title: title, description: description));
+      Navigator.pop(context);
+      print(title);
+      print(description);
+      setState(() {
+
+      });*/
+Task task = Task(title: title,
+    description: description,
+    dateTime: selectedTime,
+    isDone: true
+);
+Navigator.pop(context);
+FirebaseUtils.addTaskToFirestore(task).timeout(Duration(seconds: 2),
+  onTimeout:(){ print("%%%%%%%%%%%%%%TASK ADDED SUCCESSFULLY%%%%%%%%%%%%%");}
+);
+
 
     }
   }
