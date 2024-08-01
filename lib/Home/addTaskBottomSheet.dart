@@ -1,7 +1,12 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:to_do/appColors.dart';
+import 'package:to_do/fireBase_utils.dart';
+import 'package:to_do/task.dart';
+
+import '../listProvider.dart';
 
 class Addtaskbottomsheet extends StatefulWidget {
   const Addtaskbottomsheet({super.key});
@@ -14,8 +19,15 @@ class _AddtaskbottomsheetState extends State<Addtaskbottomsheet> {
   var selectedTime = DateTime.now();
   var formKey = GlobalKey<FormState>();
   var task ;
+  String title = "",description = "";
+  DateTime dateTime = DateTime.now();
+  late ListProvider listProvider;
+
+
   @override
   Widget build(BuildContext context) {
+    listProvider = Provider.of<ListProvider>(context);
+
     return Padding(
           padding: const EdgeInsets.only(right: 40,left: 40,bottom: 20,top: 45),
           child:
@@ -27,11 +39,13 @@ class _AddtaskbottomsheetState extends State<Addtaskbottomsheet> {
             textAlign: TextAlign.center,
     ),
     SizedBox(height: MediaQuery.of(context).size.height*0.05,),
+
+
     Form(
         key: formKey,
         child: TextFormField(
           onChanged: (text){
-            task = text;
+            title = text;
           },
       validator: (text){
         if(text == null || text.isEmpty){
@@ -45,7 +59,29 @@ class _AddtaskbottomsheetState extends State<Addtaskbottomsheet> {
     ),
     )
     ),
-                SizedBox(height: MediaQuery.of(context).size.height*.12,),
+
+                SizedBox(height: MediaQuery.of(context).size.height*.03,),
+
+    Form(
+        child: TextFormField(
+          onChanged: (text){
+            description = text;
+          },/*
+      validator: (text){
+        if(text == null || text.isEmpty){
+          return 'Please enter the task you want to do';
+        }
+          return null;
+
+      },*/
+    decoration: InputDecoration(
+    hintText: "Description",hintStyle: Theme.of(context).textTheme.displayMedium
+    ),
+    )
+    ),
+
+
+                SizedBox(height: MediaQuery.of(context).size.height*.03,),
 
     Text("select time",style: Theme.of(context).textTheme.displayMedium!.copyWith(color: Colors.black),
     textAlign: TextAlign.start,),
@@ -85,8 +121,18 @@ class _AddtaskbottomsheetState extends State<Addtaskbottomsheet> {
   }
 
   void addTask() {
-    if(formKey.currentState!.validate()==true){
-      print(task);
+    if(formKey.currentState?.validate()==true){
+      Task task = Task(
+          title: title,
+          description:description ,
+          dateTime: selectedTime);
+      FirebaseUtils.addTaskToFireStore(task).timeout(Duration(seconds: 1),
+        onTimeout:(){ print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+        listProvider.getAllTasksFromFireBase();
+
+        },);
+      Navigator.pop(context);
+
     }
   }
 }
