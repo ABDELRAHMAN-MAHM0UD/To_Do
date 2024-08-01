@@ -13,7 +13,8 @@ class Addtaskbottomsheet extends StatefulWidget {
 class _AddtaskbottomsheetState extends State<Addtaskbottomsheet> {
   var selectedTime = DateTime.now();
   var formKey = GlobalKey<FormState>();
-  var task ;
+  String title = "";
+  String description = "";
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -27,11 +28,13 @@ class _AddtaskbottomsheetState extends State<Addtaskbottomsheet> {
             textAlign: TextAlign.center,
     ),
     SizedBox(height: MediaQuery.of(context).size.height*0.05,),
+
+
     Form(
         key: formKey,
         child: TextFormField(
           onChanged: (text){
-            task = text;
+            title = text;
           },
       validator: (text){
         if(text == null || text.isEmpty){
@@ -45,9 +48,24 @@ class _AddtaskbottomsheetState extends State<Addtaskbottomsheet> {
     ),
     )
     ),
-                SizedBox(height: MediaQuery.of(context).size.height*.12,),
 
-    Text("select time",style: Theme.of(context).textTheme.displayMedium!.copyWith(color: Colors.black),
+
+                SizedBox(height: MediaQuery.of(context).size.height*.06,),
+
+     Form(
+                    child: TextFormField(
+                      onChanged: (text){
+                        description = text;
+                      },
+
+                      decoration: InputDecoration(
+                          hintText: "Task Description",hintStyle: Theme.of(context).textTheme.displayMedium
+                      ),
+                    )
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height*.05,),
+
+                Text("select time",style: Theme.of(context).textTheme.displayMedium!.copyWith(color: Colors.black),
     textAlign: TextAlign.start,),
                 SizedBox(height: MediaQuery.of(context).size.height*0.03,),
                 InkWell(
@@ -86,7 +104,7 @@ class _AddtaskbottomsheetState extends State<Addtaskbottomsheet> {
 
   void addTask() {
     if(formKey.currentState!.validate()==true){
-      print(task);
+
     }
   }
 }

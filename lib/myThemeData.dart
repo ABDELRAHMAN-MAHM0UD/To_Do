@@ -11,7 +11,7 @@ class myThemeData{
       ),
     textTheme: TextTheme(
       titleLarge: GoogleFonts.poppins(
-        color: appColors.white,fontSize: 22,fontWeight: FontWeight.bold,
+        color: appColors.white,fontSize: 27,fontWeight: FontWeight.bold,
       ),
       titleMedium: GoogleFonts.poppins(
         color: Color(0xff383838),fontSize: 18,fontWeight: FontWeight.bold,

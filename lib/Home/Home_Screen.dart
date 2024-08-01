@@ -34,29 +34,29 @@ class _HomeScreenState extends State<HomeScreen> {
         shape: CircularNotchedRectangle(),
         notchMargin: 8,
         child:*/ BottomNavigationBar(
-          currentIndex: SelectedIndex,
-          onTap: (index){
-            setState(() {
-              SelectedIndex = index;
-            });
-            },
-          items: [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.list),
-                label:'Tasks'
-            ),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.settings),
-                label:'settings'
-            )
-          ],
-        ),
+        currentIndex: SelectedIndex,
+        onTap: (index){
+          setState(() {
+            SelectedIndex = index;
+          });
+        },
+        items: [
+          BottomNavigationBarItem(
+              icon: Icon(Icons.list),
+              label:'Tasks'
+          ),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              label:'settings'
+          )
+        ],
+      ),
 
       body: Column(
         children: [
           Container(
-            color: appColors.mainColor,
-            height: MediaQuery.of(context).size.height*.09
+              color: appColors.mainColor,
+              height: MediaQuery.of(context).size.height*.09
           ),
           Expanded(child: taps[0])
         ],
