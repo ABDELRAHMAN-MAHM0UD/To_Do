@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:to_do/Home/oneTaskItem.dart';
+import 'package:to_do/firebase_utils.dart';
 import 'package:to_do/provider.dart';
 import 'package:easy_date_timeline/easy_date_timeline.dart';
+import 'Task.dart';
 
 class Taskstap extends StatefulWidget {
   const Taskstap({super.key});
@@ -14,8 +17,10 @@ class Taskstap extends StatefulWidget {
 class _TaskstapState extends State<Taskstap> {
   @override
   Widget build(BuildContext context) {
-
-
+    var provider = Provider.of<ListProvider>(context);
+    if(provider.tasksList.isEmpty) {
+     provider.getTasksFromFirestore();
+    }
     return
       Column(
         children: [
@@ -50,10 +55,10 @@ class _TaskstapState extends State<Taskstap> {
           Expanded(
             child: ListView.builder(
               itemBuilder: (context, index) {
-              return Onetaskitem(/*task: ListProvider.tasksList[index]*/);
+              return Onetaskitem(task: provider.tasksList[index],);
 
             },
-              itemCount: 5,
+              itemCount: provider.tasksList.length,
             ),
           )
         ],

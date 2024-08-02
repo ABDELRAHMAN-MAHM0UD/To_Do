@@ -19,11 +19,11 @@ class _AddtaskbottomsheetState extends State<Addtaskbottomsheet> {
   var formKey = GlobalKey<FormState>();
   String title = "";
   String description = "";
+  late ListProvider listProvider;
+
   @override
   Widget build(BuildContext context) {
-/*
-    var listProvider = Provider.of<ListProvider>(context);
-*/
+     listProvider = Provider.of<ListProvider>(context);
 
     return Padding(
           padding: const EdgeInsets.only(right: 40,left: 40,bottom: 20,top: 45),
@@ -112,21 +112,18 @@ class _AddtaskbottomsheetState extends State<Addtaskbottomsheet> {
 
   void addTask() {
     if(formKey.currentState!.validate()==true){
-     /* ListProvider.tasksList.add(Task(title: title, description: description));
-      Navigator.pop(context);
-      print(title);
-      print(description);
-      setState(() {
-
-      });*/
-Task task = Task(title: title,
-    description: description,
-    dateTime: selectedTime,
-    isDone: true
+      Task task = Task(
+        title: title,
+        description: description,
+        dateTime: selectedTime,
+        isDone: true
 );
-Navigator.pop(context);
 FirebaseUtils.addTaskToFirestore(task).timeout(Duration(seconds: 2),
-  onTimeout:(){ print("%%%%%%%%%%%%%%TASK ADDED SUCCESSFULLY%%%%%%%%%%%%%");}
+  onTimeout:(){ print("%%%%%%%%%%%%%%TASK ADDED SUCCESSFULLY%%%%%%%%%%%%%");
+listProvider.getTasksFromFirestore();
+  Navigator.pop(context);
+
+}
 );
 
 

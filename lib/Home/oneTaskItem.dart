@@ -4,9 +4,9 @@ import '../appColors.dart';
 import 'Task.dart';
 
 class Onetaskitem extends StatelessWidget {
-/*
-Task task ;
-Onetaskitem({required this.task});*/
+
+  Task task ;
+  Onetaskitem({required this.task});
 
   @override
   Widget build(BuildContext context) {
@@ -16,53 +16,53 @@ Onetaskitem({required this.task});*/
       margin: EdgeInsets.symmetric(horizontal: 20,vertical: 12),
       child: Slidable(
         // Specify a key if the Slidable is dismissible.
-        key: const ValueKey(0),
-      
-        // The start action pane is the one at the left or the top side.
-        startActionPane: ActionPane(
-          // A motion is a widget used to control how the pane animates.
-          motion: const ScrollMotion(),
-      
-          // A pane can dismiss the Slidable.
-          dismissible: DismissiblePane(onDismissed: () {}),
-          extentRatio: .3,
-      
-          // All actions are defined in the children parameter.
-          children:  [
-            // A SlidableAction can have an icon and/or a label.
-            SlidableAction(
-              onPressed: (_){},
-              backgroundColor: Color(0xFFFE4A49),
-              foregroundColor: Colors.white,
-              icon: Icons.delete,
-              label: 'Delete',
-            ),
-          ],
-        ),
-        endActionPane: ActionPane(motion: ScrollMotion(),
-            extentRatio: .3,
-            children:[ SlidableAction(
-              onPressed: (_){},
-              backgroundColor: Color(0xFFFE4A49),
-              foregroundColor: Colors.white,
-              icon: Icons.delete,
-              label: 'Delete',
-            )
-      ]
-      ,),
-      
-        // The end action pane is the one at the right or the bottom side.
-      
-        // The child of the Slidable is what the user sees when the
-        // component is not dragged.
-        child:
+          key: const ValueKey(0),
+
+          // The start action pane is the one at the left or the top side.
+          startActionPane: ActionPane(
+            // A motion is a widget used to control how the pane animates.
+            motion: const ScrollMotion(),
+
+            // A pane can dismiss the Slidable.
+            dismissible: DismissiblePane(onDismissed: () {}),
+
+            // All actions are defined in the children parameter.
+            children:  [
+              // A SlidableAction can have an icon and/or a label.
+              SlidableAction(
+                onPressed: (_){},
+                backgroundColor: Color(0xFFFE4A49),
+                foregroundColor: Colors.white,
+                icon: Icons.delete,
+                label: 'Delete',
+              ),
+            ],
+          ),
+
+          // The end action pane is the one at the right or the bottom side.
+          endActionPane:  ActionPane(
+            motion: ScrollMotion(),
+            children: [
+              SlidableAction(
+                onPressed: (_){},
+                backgroundColor: Color(0xFFFE4A49),
+                foregroundColor: Colors.white,
+                icon: Icons.delete,
+                label: 'Delete',
+              ),
+            ],
+          ),
+
+          // The child of the Slidable is what the user sees when the
+          // component is not dragged.
+          child:
         Container(
         width: double.infinity,
         height: height*.13,
         decoration: BoxDecoration(
             color: appColors.white,
             borderRadius: BorderRadius.circular(25)),
-      
+
         child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -76,9 +76,9 @@ Onetaskitem({required this.task});*/
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("title",style: Theme.of(context).textTheme.titleLarge!.
+                    Text(task.title,style: Theme.of(context).textTheme.titleLarge!.
                     copyWith(color: appColors.mainColor),),
-                    Text("descreption",style: Theme.of(context).textTheme.titleLarge!.
+                    Text(task.description,style: Theme.of(context).textTheme.titleLarge!.
                     copyWith(color: appColors.black),),/* Text(task.title,style: Theme.of(context).textTheme.titleLarge!.
                     copyWith(color: appColors.mainColor),),
                     Text(task.description,style: Theme.of(context).textTheme.titleLarge!.
@@ -90,7 +90,7 @@ Onetaskitem({required this.task});*/
                 padding: const EdgeInsets.all(17),
                 child: Icon(Icons.check_circle,size: 55,color: appColors.mainColor,),
               )
-      
+
             ]
         ),
       )

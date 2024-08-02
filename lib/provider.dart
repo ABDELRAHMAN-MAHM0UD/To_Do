@@ -1,13 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'Home/Task.dart';
+import 'firebase_utils.dart';
 
 class ListProvider extends ChangeNotifier{
 
-  static List<Task>tasksList = [];
+  List<Task> tasksList = [];
   @override
-  void notifyListeners() {
-    // TODO: implement notifyListeners
-    super.notifyListeners();
+  void getTasksFromFirestore()async{
+    QuerySnapshot<Task> querySnapshot = await FirebaseUtils.getTasksCollection().get();
+    tasksList = querySnapshot.docs.map((doc) {
+      return doc.data();
+    },).toList();
+    notifyListeners();
   }
 }
