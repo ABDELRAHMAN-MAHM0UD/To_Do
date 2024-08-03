@@ -17,18 +17,18 @@ class Taskstap extends StatefulWidget {
 class _TaskstapState extends State<Taskstap> {
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<ListProvider>(context);
-    if(provider.tasksList.isEmpty) {
-     provider.getTasksFromFirestore();
+    var listProvider = Provider.of<ListProvider>(context);
+    if(listProvider.tasksList.isEmpty) {
+      listProvider.getTasksFromFirestore();
     }
     return
       Column(
         children: [
           Container(margin: EdgeInsets.only(bottom: 10),
             child: EasyDateTimeLine(
-            initialDate: DateTime.now(),
+            initialDate: listProvider.Selecteddate,
             onDateChange: (selectedDate) {
-              //`selectedDate` the new date selected.
+              listProvider.newSelectDate(selectedDate);
             },
             headerProps: const EasyHeaderProps(
               monthPickerType: MonthPickerType.switcher,
@@ -55,10 +55,10 @@ class _TaskstapState extends State<Taskstap> {
           Expanded(
             child: ListView.builder(
               itemBuilder: (context, index) {
-              return Onetaskitem(task: provider.tasksList[index],);
+              return Onetaskitem(task: listProvider.tasksList[index],);
 
             },
-              itemCount: provider.tasksList.length,
+              itemCount: listProvider.tasksList.length,
             ),
           )
         ],

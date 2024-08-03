@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -31,10 +33,14 @@ class _AddtaskbottomsheetState extends State<Addtaskbottomsheet> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-
-            Text("Add new Task",style: Theme.of(context).textTheme.titleMedium,
+              listProvider.isDark()?
+            Text("Add new Task",style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                color: appColors.white),
             textAlign: TextAlign.center,
-    ),
+               ):
+              Text("Add new Task",style: Theme.of(context).textTheme.titleMedium,
+                textAlign: TextAlign.center,
+              ),
     SizedBox(height: MediaQuery.of(context).size.height*0.05,),
 
 
@@ -60,7 +66,7 @@ class _AddtaskbottomsheetState extends State<Addtaskbottomsheet> {
 
                 SizedBox(height: MediaQuery.of(context).size.height*.06,),
 
-     Form(
+                 Form(
                     child: TextFormField(
                       onChanged: (text){
                         description = text;
@@ -72,24 +78,35 @@ class _AddtaskbottomsheetState extends State<Addtaskbottomsheet> {
                     )
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height*.05,),
-
-                Text("select time",style: Theme.of(context).textTheme.displayMedium!.copyWith(color: Colors.black),
-    textAlign: TextAlign.start,),
+                listProvider.isDark()?
+                Text("select time",style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                    color: Colors.black),
+                textAlign: TextAlign.start,):
+                Text("select time",style: Theme.of(context).textTheme.displayMedium,
+                  textAlign: TextAlign.start,),
                 SizedBox(height: MediaQuery.of(context).size.height*0.03,),
                 InkWell(
                   onTap:(){ showCalender();
                     },
-                  child: Text(
+                  child: listProvider.isDark()?
+                  Text(
                     "${selectedTime.day}/${selectedTime.month}/${selectedTime.year}"
-                    ,style: Theme.of(context).textTheme.displaySmall,
-                      textAlign: TextAlign.center,),
+                    ,style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                      color: appColors.white),
+                      textAlign: TextAlign.center,):
+                  Text(
+                    "${selectedTime.day}/${selectedTime.month}/${selectedTime.year}"
+                    ,style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                      color: appColors.time),
+                    textAlign: TextAlign.center,)
+
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height*.06,),
+                SizedBox(height: MediaQuery.of(context).size.height*.04,),
 
                 ElevatedButton(onPressed: (){
                   addTask();
                 } ,
-                    style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(appColors.mainColor)),
+                    style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(appColors.mainLightColor )),
                     child: Text("Done",style: TextStyle(color: Colors.white),))
 
               ]

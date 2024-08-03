@@ -1,10 +1,37 @@
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../provider.dart';
 
 class Settingstap extends StatelessWidget {
-  const Settingstap({super.key});
+  static const String themeLight = "Light Mode";
+  static const String themeDark = "Dark Mode";
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    var listProvider = Provider.of<ListProvider>(context);
+    String selectedTheme = listProvider.isDark() ? themeDark : themeLight;
+
+    return Scaffold(
+      body: Center(
+        child: DropdownButton<String>(
+          iconSize: 40,
+          value: selectedTheme,
+          items: <String>[themeLight, themeDark].map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            if (newValue != null) {
+              listProvider.AppTheme =
+              newValue == themeLight ? ThemeMode.light : ThemeMode.dark;
+            }
+          },
+        ),
+      ),
+    );
   }
 }

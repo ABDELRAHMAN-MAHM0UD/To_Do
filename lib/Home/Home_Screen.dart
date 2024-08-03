@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:to_do/Home/addTaskBottomSheet.dart';
 import 'package:to_do/Home/settingsTap.dart';
 import 'package:to_do/Home/tasksTap.dart';
 import 'package:to_do/appColors.dart';
+import 'package:to_do/provider.dart';
+
+import '../myThemeData.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName= "HomeScreen";
@@ -17,9 +21,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> taps= [Taskstap(),
+      Settingstap() ];
+    var listProvider = Provider.of<ListProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text("To Do List",style: Theme.of(context).textTheme.titleLarge,),
+        title: listProvider.isDark()?
+        Text("To Do List",style: Theme.of(context).textTheme.titleLarge!.copyWith(color:
+        appColors.darkBGColor
+        ),):
+        Text("To Do List",style: Theme.of(context).textTheme.titleLarge,)
+
       ),
 
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -47,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           BottomNavigationBarItem(
               icon: Icon(Icons.settings),
-              label:'settings'
+              label:'settings',
           )
         ],
       ),
@@ -55,18 +67,18 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         children: [
           Container(
-              color: appColors.mainColor,
+              color: appColors.mainLightColor,
+
               height: MediaQuery.of(context).size.height*.09
           ),
-          Expanded(child: taps[0])
+          Expanded(child: taps[SelectedIndex])
         ],
       ),
 
 
     );
   }
-  List<Widget> taps= [Taskstap(),
-    Settingstap() ];
+
 
   void addTaskBottomSheet() {
     showModalBottomSheet(context: context,

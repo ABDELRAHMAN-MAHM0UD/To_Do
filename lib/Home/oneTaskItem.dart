@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:provider/provider.dart';
+import 'package:to_do/provider.dart';
 import '../appColors.dart';
 import 'Task.dart';
 
@@ -10,6 +12,7 @@ class Onetaskitem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var listProvider =  Provider.of<ListProvider>(context);
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Container(
@@ -30,7 +33,11 @@ class Onetaskitem extends StatelessWidget {
             children:  [
               // A SlidableAction can have an icon and/or a label.
               SlidableAction(
-                onPressed: (_){},
+                onPressed: (_){
+                ListProvider.deleteTaskFromFirebase(task);
+                listProvider.getTasksFromFirestore();
+
+                },
                 backgroundColor: Color(0xFFFE4A49),
                 foregroundColor: Colors.white,
                 icon: Icons.delete,
@@ -44,7 +51,10 @@ class Onetaskitem extends StatelessWidget {
             motion: ScrollMotion(),
             children: [
               SlidableAction(
-                onPressed: (_){},
+                onPressed: (_){
+                  ListProvider.deleteTaskFromFirebase(task);
+                  listProvider.getTasksFromFirestore();
+                },
                 backgroundColor: Color(0xFFFE4A49),
                 foregroundColor: Colors.white,
                 icon: Icons.delete,
@@ -59,7 +69,12 @@ class Onetaskitem extends StatelessWidget {
         Container(
         width: double.infinity,
         height: height*.13,
-        decoration: BoxDecoration(
+        decoration:
+        listProvider.isDark()
+        ?BoxDecoration(
+            color: appColors.mainDarkColor,
+            borderRadius: BorderRadius.circular(25))
+        :BoxDecoration(
             color: appColors.white,
             borderRadius: BorderRadius.circular(25)),
 
@@ -69,7 +84,9 @@ class Onetaskitem extends StatelessWidget {
               Container(
                 margin: EdgeInsets.all(20),
                 width: width*.015,height: height*.08,
-                color: appColors.mainColor,
+                color:listProvider.isDark()?
+                    appColors.mainDarkColor:
+                    appColors.mainLightColor,
               ),
               Expanded(
                 child: Column(
@@ -77,9 +94,15 @@ class Onetaskitem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(task.title,style: Theme.of(context).textTheme.titleLarge!.
-                    copyWith(color: appColors.mainColor),),
+                    copyWith(color: appColors.mainLightColor),),
+                    listProvider.isDark()?
                     Text(task.description,style: Theme.of(context).textTheme.titleLarge!.
-                    copyWith(color: appColors.black),),/* Text(task.title,style: Theme.of(context).textTheme.titleLarge!.
+                    copyWith(color: appColors.white),):
+
+                    Text(task.description,style: Theme.of(context).textTheme.titleLarge!.
+                    copyWith(color: appColors.black),)
+
+                    /* Text(task.title,style: Theme.of(context).textTheme.titleLarge!.
                     copyWith(color: appColors.mainColor),),
                     Text(task.description,style: Theme.of(context).textTheme.titleLarge!.
                     copyWith(color: appColors.black),),*/
@@ -87,11 +110,19 @@ class Onetaskitem extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(17),
-                child: Icon(Icons.check_circle,size: 55,color: appColors.mainColor,),
-              )
-
+                padding: const EdgeInsets.all(20),
+                child: Stack(children:[
+                  Container(
+                    margin: EdgeInsets.only(left: 11,top: 11),
+                    color: appColors.white,
+                  width:width*.078,
+                    height: height*.03,
+                  ),
+                  Icon(Icons.check_box,size: 55,color: appColors.mainLightColor,),
             ]
+              )
+        )
+          ]
         ),
       )
       ),
