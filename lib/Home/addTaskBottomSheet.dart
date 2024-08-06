@@ -1,6 +1,4 @@
-
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,18 +8,30 @@ import 'package:to_do/firebase_utils.dart';
 import 'package:to_do/provider.dart';
 
 class Addtaskbottomsheet extends StatefulWidget {
-  const Addtaskbottomsheet({super.key});
+  String headTitle;
+  String? taskTitle;
+  String? taskDescription;
+  Addtaskbottomsheet({required this.headTitle ,  this.taskTitle ,
+   this.taskDescription});
+
 
   @override
   State<Addtaskbottomsheet> createState() => _AddtaskbottomsheetState();
 }
-
 class _AddtaskbottomsheetState extends State<Addtaskbottomsheet> {
   var selectedTime = DateTime.now();
   var formKey = GlobalKey<FormState>();
   String title = "";
   String description = "";
   late ListProvider listProvider;
+  late TextEditingController TitleController ;
+  late TextEditingController DescController ;
+
+  void initState() {
+    super.initState();
+    TitleController = TextEditingController(text: widget.taskTitle);
+    DescController = TextEditingController(text: widget.taskDescription);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +44,11 @@ class _AddtaskbottomsheetState extends State<Addtaskbottomsheet> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
               listProvider.isDark()?
-            Text("Add new Task",style: Theme.of(context).textTheme.titleMedium!.copyWith(
+            Text(widget.headTitle,style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: appColors.white),
             textAlign: TextAlign.center,
                ):
-              Text("Add new Task",style: Theme.of(context).textTheme.titleMedium,
+              Text(widget.headTitle,style: Theme.of(context).textTheme.titleMedium,
                 textAlign: TextAlign.center,
               ),
     SizedBox(height: MediaQuery.of(context).size.height*0.05,),
@@ -57,6 +67,7 @@ class _AddtaskbottomsheetState extends State<Addtaskbottomsheet> {
           return null;
 
       },
+            controller: TitleController,
     decoration: InputDecoration(
     hintText: "enter your task",hintStyle: Theme.of(context).textTheme.displayMedium
     ),
@@ -75,6 +86,7 @@ class _AddtaskbottomsheetState extends State<Addtaskbottomsheet> {
                       decoration: InputDecoration(
                           hintText: "Task Description",hintStyle: Theme.of(context).textTheme.displayMedium
                       ),
+                      controller: DescController,
                     )
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height*.05,),
@@ -133,8 +145,7 @@ class _AddtaskbottomsheetState extends State<Addtaskbottomsheet> {
         title: title,
         description: description,
         dateTime: selectedTime,
-        isDone: true
-);
+        );
 FirebaseUtils.addTaskToFirestore(task).timeout(Duration(seconds: 2),
   onTimeout:(){ print("%%%%%%%%%%%%%%TASK ADDED SUCCESSFULLY%%%%%%%%%%%%%");
 listProvider.getTasksFromFirestore();

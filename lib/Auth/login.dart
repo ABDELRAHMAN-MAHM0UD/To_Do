@@ -96,7 +96,6 @@ class _LoginState extends State<Login> {
                 },
                     child: Text("Don't have an account? create one",style: TextStyle(color: Colors.blueAccent,
                         decoration:TextDecoration.underline,decorationColor: Colors.blueAccent ),))
-
               ],
             ),
           ),
@@ -108,7 +107,8 @@ class _LoginState extends State<Login> {
   void login()async{
     if(formKey.currentState?.validate()==true){
       Dialogutils.showLoading(context);
-      Navigator.of(context).pushNamed(HomeScreen.routeName);try {
+      Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+      try {
         final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: EmailController.text,
           password: PasswordController.text,

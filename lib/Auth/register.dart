@@ -111,8 +111,14 @@ var formKey = GlobalKey<FormState>();
               },
                   style: ButtonStyle(backgroundColor:WidgetStatePropertyAll(
                       appColors.mainLightColor) ),
-                  child: Text("create",style: TextStyle(color: Colors.white),))
-
+                  child: Text("create",style: TextStyle(color: Colors.white),)),
+              TextButton(onPressed: (){
+                Navigator.of(context).pushNamed(Login.routeName);
+              },
+                  child: Text("Already have an acount? Login",
+                    style: TextStyle(color: Colors.blueAccent,
+                      decoration:TextDecoration.underline,
+                        decorationColor: Colors.blueAccent ),))
           ],
                 ),
         ),
@@ -124,7 +130,7 @@ var formKey = GlobalKey<FormState>();
   void register()async{
     if(formKey.currentState?.validate()==true){
       Dialogutils.showLoading(context);
-      Navigator.of(context).pushNamed(Login.routeName);try {
+      Navigator.of(context).pushReplacementNamed(Login.routeName);try {
         final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: EmailController.text,
           password: PasswordController.text,

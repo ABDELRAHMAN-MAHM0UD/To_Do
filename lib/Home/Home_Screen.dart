@@ -82,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void addTaskBottomSheet() {
     showModalBottomSheet(context: context,
-        builder: (_) => Addtaskbottomsheet());
+        builder: (_) => Addtaskbottomsheet(headTitle: "Add Task",));
     setState(() {
 
     });
