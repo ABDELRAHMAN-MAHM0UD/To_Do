@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:to_do/Home/addTaskBottomSheet.dart';
-import 'package:to_do/provider.dart';
+import 'package:to_do/Providers/provider.dart';
+import '../Providers/AuthUserProvider.dart';
 import '../appColors.dart';
 import 'Task.dart';
 
 class Onetaskitem extends StatefulWidget {
 
   Task task ;
+
   Onetaskitem({required this.task});
 
   @override
@@ -17,8 +19,11 @@ class Onetaskitem extends StatefulWidget {
 
 class _OnetaskitemState extends State<Onetaskitem> {
 
+  bool taskDone = false;
   @override
   Widget build(BuildContext context) {
+    var userProvider = Provider.of<Authuserprovider>(context);
+
     var listProvider =  Provider.of<ListProvider>(context);
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
@@ -41,7 +46,10 @@ class _OnetaskitemState extends State<Onetaskitem> {
               SlidableAction(
                 onPressed: (_){
                 ListProvider.deleteTaskFromFirebase(widget.task);
-                listProvider.getTasksFromFirestore();
+                listProvider.getTasksFromFirestore(userProvider.currentUser!.id!);
+                setState(() {
+
+                });
 
                 },
                 backgroundColor: Color(0xFFFE4A49),
@@ -58,7 +66,10 @@ class _OnetaskitemState extends State<Onetaskitem> {
               SlidableAction(
                 onPressed: (_){
                   ListProvider.deleteTaskFromFirebase(widget.task);
-                  listProvider.getTasksFromFirestore();
+                  listProvider.getTasksFromFirestore(userProvider.currentUser!.id!);
+                  setState(() {
+
+                  });
                 },
                 backgroundColor: Color(0xFFFE4A49),
                 foregroundColor: Colors.white,
@@ -97,43 +108,77 @@ class _OnetaskitemState extends State<Onetaskitem> {
           child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  margin: EdgeInsets.all(20),
-                  width: width*.015,height: height*.08,
-                  color:listProvider.isDark()?
-                      appColors.mainDarkColor:
-                      appColors.mainLightColor,
-                ),
+
+              Container(
+                margin: EdgeInsets.all(20),
+                width: width*.015,height: height*.08,
+                color:
+                taskDone?
+                appColors.green:
+                appColors.mainLightColor,
+              ),
                 Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(widget.task.title,style: Theme.of(context).textTheme.titleLarge!.
-                      copyWith(color: appColors.mainLightColor),),
-                      listProvider.isDark()?
-                      Text(widget.task.description,style: Theme.of(context).textTheme.titleLarge!.
-                      copyWith(color: appColors.white),):
+                      Text(widget.task.title,
+                          style:taskDone?
+                      Theme.of(context).textTheme.titleLarge!.
+                      copyWith(color: appColors.green):
 
-                      Text(widget.task.description,style: Theme.of(context).textTheme.titleLarge!.
-                      copyWith(color: appColors.black),)
+                      Theme.of(context).textTheme.titleLarge!.
+                      copyWith(color: appColors.mainLightColor)
+                      ),
+                      listProvider.isDark()?
+
+                      Text(widget.task.description,
+                        style:taskDone?
+                        Theme.of(context).textTheme.titleLarge!.
+                      copyWith(color: appColors.green):
+                        Theme.of(context).textTheme.titleLarge!.
+                        copyWith(color: appColors.white)
+                      ):
+                      Text(widget.task.description,
+                        style:taskDone?
+                        Theme.of(context).textTheme.titleLarge!.
+                        copyWith(color: appColors.green):
+                        Theme.of(context).textTheme.titleLarge!.
+                        copyWith(color: appColors.black)
+                      )
 
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Stack(children:[
-                    Container(
-                      margin: EdgeInsets.only(left: 11,top: 11),
-                      color: appColors.white,
-                    width:width*.078,
-                      height: height*.03,
-                    ),
-                    Icon(Icons.check_box,size: 55,color: appColors.mainLightColor,),
-              ]
+                InkWell(
+                  onTap: (){
+                    setState(() {
+                      widget.task.isDone = true ;
+                      taskDone = widget.task.isDone;
+                    });
+                  },
+                  child:
+                      taskDone?
+                  Padding(
+                    padding: const EdgeInsets.all(25),
+                    child:
+                      Text("Done",style: Theme.of(context).textTheme.titleLarge!
+                          .copyWith(color: appColors.green),)
+                  ):
+                      Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Stack(children:[
+                            Container(
+                              margin: EdgeInsets.only(left: 11,top: 11),
+                              color: appColors.white,
+                              width:width*.078,
+                              height: height*.03,
+                            ),
+                            Icon(Icons.check_box_sharp,size: 50,color: appColors.mainLightColor,),
+                          ]
+                          )
+                      )
                 )
-          )
             ]
           ),
                 ),

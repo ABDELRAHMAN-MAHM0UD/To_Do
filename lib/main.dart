@@ -7,8 +7,9 @@ import 'package:provider/provider.dart';
 import 'package:to_do/Auth/login.dart';
 import 'package:to_do/Auth/register.dart';
 import 'package:to_do/Home/Home_Screen.dart';
+import 'package:to_do/Providers/AuthUserProvider.dart';
 import 'package:to_do/myThemeData.dart';
-import 'package:to_do/provider.dart';
+import 'package:to_do/Providers/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main()async{
@@ -22,10 +23,12 @@ void main()async{
         projectId: 'to-do-acd27')
   ):
   await Firebase.initializeApp();
-  await FirebaseFirestore.instance.disableNetwork();
 
-  runApp(ChangeNotifierProvider(
-      create: (context)=> ListProvider(),
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (context)=> ListProvider()),
+      ChangeNotifierProvider(create: (context)=> Authuserprovider(),)
+    ],
       child: myApp()));
 }
 
@@ -48,7 +51,7 @@ class myApp extends StatelessWidget {
         Register.routeName: (context) => Register(),
         Login.routeName: (context) => Login(),
       },
-      initialRoute: HomeScreen.routeName,
+      initialRoute: Register.routeName,
       theme: MyThemeData.lightTheme,
       darkTheme: MyThemeData.darkTheme,
       themeMode: listProvider.appThemeMode,

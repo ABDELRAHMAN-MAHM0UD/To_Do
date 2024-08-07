@@ -1,11 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:to_do/Auth/register.dart';
 import 'package:to_do/Auth/textFormField.dart';
 import 'package:to_do/Home/Home_Screen.dart';
 import 'package:to_do/appColors.dart';
+import 'package:to_do/firebase_utils.dart';
 
+import '../Providers/AuthUserProvider.dart';
 import 'dialogUtils.dart';
 
 class Login extends StatefulWidget {
@@ -16,13 +19,11 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  TextEditingController nameController = TextEditingController();
 
-  TextEditingController EmailController = TextEditingController();
+  TextEditingController EmailController = TextEditingController(text: "user@mail.com");
 
-  TextEditingController PasswordController = TextEditingController();
+  TextEditingController PasswordController = TextEditingController(text: "666666");
 
-  TextEditingController confirmPassController = TextEditingController();
 
   var formKey = GlobalKey<FormState>();
 
@@ -92,7 +93,7 @@ class _LoginState extends State<Login> {
                       child: Text("login",style: TextStyle(color: Colors.white,fontSize: 22),),
                     )),
                 TextButton(onPressed: (){
-                  Navigator.of(context).pushNamed(Register.routeName);
+                  Navigator.of(context).pushReplacementNamed(Register.routeName);
                 },
                     child: Text("Don't have an account? create one",style: TextStyle(color: Colors.blueAccent,
                         decoration:TextDecoration.underline,decorationColor: Colors.blueAccent ),))
@@ -107,16 +108,26 @@ class _LoginState extends State<Login> {
   void login()async{
     if(formKey.currentState?.validate()==true){
       Dialogutils.showLoading(context);
-      Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
       try {
         final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: EmailController.text,
           password: PasswordController.text,
         );
+        print('User signed in: ${credential.user?.uid}');
 
+        var user = await FirebaseUtils.readUserFromFirestore(credential.user?.uid ?? "");
+        if (user == null) {
+          print('User not found in Firestore');
+          return;
+        }
+
+        var userProvider = Provider.of<Authuserprovider>(context,listen: false);
+        userProvider.update(user);
       } catch (e) {
         print(e);
       }
     }
+    Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
+
   }
 }

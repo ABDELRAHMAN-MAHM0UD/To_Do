@@ -3,7 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:to_do/Auth/login.dart';
 import 'package:to_do/Auth/textFormField.dart';
+import 'package:to_do/Home/Home_Screen.dart';
 import 'package:to_do/appColors.dart';
+import 'package:to_do/firebase_utils.dart';
+import 'package:to_do/myUsers.dart';
 
 import 'dialogUtils.dart';
 
@@ -15,13 +18,13 @@ static const String routeName = "Register";
 }
 
 class _RegisterState extends State<Register> {
-TextEditingController nameController = TextEditingController();
+TextEditingController nameController = TextEditingController(text: "user");
 
-TextEditingController EmailController = TextEditingController();
+TextEditingController EmailController = TextEditingController(text: "user@mail.com");
 
-TextEditingController PasswordController = TextEditingController();
+TextEditingController PasswordController = TextEditingController(text: "666666");
 
-TextEditingController confirmPassController = TextEditingController();
+TextEditingController confirmPassController = TextEditingController(text: "666666");
 
 var formKey = GlobalKey<FormState>();
 
@@ -113,7 +116,7 @@ var formKey = GlobalKey<FormState>();
                       appColors.mainLightColor) ),
                   child: Text("create",style: TextStyle(color: Colors.white),)),
               TextButton(onPressed: (){
-                Navigator.of(context).pushNamed(Login.routeName);
+                Navigator.of(context).pushReplacementNamed(Login.routeName);
               },
                   child: Text("Already have an acount? Login",
                     style: TextStyle(color: Colors.blueAccent,
@@ -130,11 +133,19 @@ var formKey = GlobalKey<FormState>();
   void register()async{
     if(formKey.currentState?.validate()==true){
       Dialogutils.showLoading(context);
-      Navigator.of(context).pushReplacementNamed(Login.routeName);try {
-        final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      try {
+        final credential =
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: EmailController.text,
           password: PasswordController.text,
         );
+        Myusers user = Myusers(
+            id: credential.user?.uid ??'',
+            name: nameController.text,
+            email: EmailController.text);
+
+        await FirebaseUtils.addUserToFirestore(user);
+
       } on FirebaseAuthException catch (e) {
         if (e.code == 'weak-password') {
           print('The password provided is too weak.');
@@ -144,6 +155,8 @@ var formKey = GlobalKey<FormState>();
       } catch (e) {
         print(e);
       }
+      Navigator.of(context).pushReplacementNamed(Login.routeName);
+
     }
   }
 }

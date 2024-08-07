@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:to_do/Home/oneTaskItem.dart';
 import 'package:to_do/firebase_utils.dart';
-import 'package:to_do/provider.dart';
+import 'package:to_do/Providers/provider.dart';
 import 'package:easy_date_timeline/easy_date_timeline.dart';
+import '../Providers/AuthUserProvider.dart';
 import 'Task.dart';
 
 class Taskstap extends StatefulWidget {
@@ -17,9 +18,11 @@ class Taskstap extends StatefulWidget {
 class _TaskstapState extends State<Taskstap> {
   @override
   Widget build(BuildContext context) {
+    var userProvider = Provider.of<Authuserprovider>(context);
+
     var listProvider = Provider.of<ListProvider>(context);
     if(listProvider.tasksList.isEmpty) {
-      listProvider.getTasksFromFirestore();
+      listProvider.getTasksFromFirestore(userProvider.currentUser!.id!);
     }
     return
       Column(
@@ -28,7 +31,7 @@ class _TaskstapState extends State<Taskstap> {
             child: EasyDateTimeLine(
             initialDate: listProvider.Selecteddate,
             onDateChange: (selectedDate) {
-              listProvider.newSelectDate(selectedDate);
+              listProvider.newSelectDate(selectedDate,userProvider.currentUser!.id!);
             },
             headerProps: const EasyHeaderProps(
               monthPickerType: MonthPickerType.switcher,

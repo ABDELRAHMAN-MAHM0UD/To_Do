@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'Home/Task.dart';
-import 'firebase_utils.dart';
+import '../Home/Task.dart';
+import '../firebase_utils.dart';
 
 class ListProvider extends ChangeNotifier{
 
@@ -19,8 +19,9 @@ class ListProvider extends ChangeNotifier{
       notifyListeners();
     }
   }
-  void getTasksFromFirestore()async{
-    QuerySnapshot<Task> querySnapshot = await FirebaseUtils.getTasksCollection().get();
+
+  void getTasksFromFirestore(String id)async{
+    QuerySnapshot<Task> querySnapshot = await FirebaseUtils.getTasksCollection(id).get();
     tasksList = querySnapshot.docs.map((doc) {
       return doc.data();
     },).toList();
@@ -40,16 +41,19 @@ class ListProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  void newSelectDate(DateTime newDate){
+  void newSelectDate(DateTime newDate,String id){
     Selecteddate =newDate;
-    getTasksFromFirestore();
+    getTasksFromFirestore(id);
     notifyListeners();
   }
 
   static Future<void>  deleteTaskFromFirebase(Task task){
-    return FirebaseUtils.getTasksCollection().doc(task.id).delete();
+    return FirebaseUtils.getTasksCollection(task.id).doc(task.id).delete();
   }
 
   bool isDark(){
-    return _appTheme == ThemeMode.dark;  }
+    return _appTheme == ThemeMode.dark;
+  }
+
+
 }

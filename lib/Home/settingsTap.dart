@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../provider.dart';
+import '../Providers/provider.dart';
 
 class Settingstap extends StatelessWidget {
   static const String themeLight = "Light Mode";

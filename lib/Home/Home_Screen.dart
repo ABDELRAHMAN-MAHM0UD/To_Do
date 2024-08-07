@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:to_do/Auth/login.dart';
 import 'package:to_do/Home/addTaskBottomSheet.dart';
 import 'package:to_do/Home/settingsTap.dart';
 import 'package:to_do/Home/tasksTap.dart';
+import 'package:to_do/Providers/AuthUserProvider.dart';
 import 'package:to_do/appColors.dart';
-import 'package:to_do/provider.dart';
+import 'package:to_do/Providers/provider.dart';
 
 import '../myThemeData.dart';
 
@@ -24,13 +26,22 @@ class _HomeScreenState extends State<HomeScreen> {
     List<Widget> taps= [Taskstap(),
       Settingstap() ];
     var listProvider = Provider.of<ListProvider>(context);
+    var userProvider = Provider.of<Authuserprovider>(context);
+    String userName = userProvider.currentUser?.name ?? "Guest";
     return Scaffold(
       appBar: AppBar(
         title: listProvider.isDark()?
-        Text("To Do List",style: Theme.of(context).textTheme.titleLarge!.copyWith(color:
+        Text("To Do List ($userName)",style: Theme.of(context).textTheme.titleLarge!.copyWith(color:
         appColors.darkBGColor
         ),):
-        Text("To Do List",style: Theme.of(context).textTheme.titleLarge,)
+        Text("To Do List ($userName)",style: Theme.of(context).textTheme.titleLarge,),
+        actions: [
+          IconButton(onPressed: (){
+            listProvider.tasksList=[];
+            Navigator.pushReplacementNamed(context, Login.routeName);
+          },
+              icon: Icon(Icons.logout))
+        ],
 
       ),
 
